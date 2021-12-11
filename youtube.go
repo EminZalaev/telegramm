@@ -8,6 +8,7 @@ import(
   "fmt"
   "io/ioutil"
   "encoding/json"
+  "errors"
 )
 
 const YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
@@ -19,8 +20,15 @@ GET https://youtube.googleapis.com/youtube/v3/search?part=id&channelId=UC8butISF
 Authorization: Bearer [YOUR_ACCESS_TOKEN]
 Accept: application/json
 */
-func getLastVideo(channelUrl string) (string, error){
-  Re
+func GetLastVideo(channelUrl string) (string, error){
+  items, err:=retriveVideos(channelUrl)
+  if err != nil{
+    return "", err
+  }
+  if len(items)<1{
+    return "", errors.New("No video found")
+  }
+  return YOUTUBE_VIDEO_URL + "=" + items[0].Id.VideoId
 }
 
 
