@@ -25,6 +25,7 @@ func GetLastVideo(channelUrl string) (string, error){
   if err != nil{
     return "", err
   }
+  
   if len(items)<1{
     return "", errors.New("No video found")
   }
@@ -37,16 +38,19 @@ func retriveVideos(channelUrl string) ([]Item, error){
   if err != nil{
     return nil, err
   }
+  
   client := http.Client{}
   resp, err := client.Do(req)
   if err != nil{
     return nil, err
   }
+  
   body, err:= ioutil.ReadAll(resp.Body)
   if err != nil{
     return nil, err
   }
   defer resp.Body.Close()
+  
   var restResponse RestResponse
   err = json.Unmarshal(body, &restResponse)
   if err != nil{
@@ -62,6 +66,7 @@ func makeRequest(channelUrl string, maxResults int) (*http.Request,error){
   if err != nil{
     return nil, err
   }
+  
   query := req.URL.Query()
   query.Add("part","id")
   query.Add("channelId",channelId)
