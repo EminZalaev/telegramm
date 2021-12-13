@@ -73,6 +73,7 @@ func makeRequest(channelUrl string, maxResults int) (*http.Request,error){
   query.Add("maxResults",strconv.Itoa(maxResults))
   query.Add("order","date")
   query.Add("key", YOUTUBE_API_TOKEN)
+
   req.URL.RawQuery = query.Encode()
   fmt.Println(req.URL.String())
   return req, nil
