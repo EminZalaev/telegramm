@@ -14,15 +14,16 @@ import(
 
 func main(){
   botToken:="5015864716:AAGjVQyrEV0ORoKjmmC976y91DJiinv79OA"
-
   botApi:= "https://api.telegram.org/bot"
   botUrl:=botApi + botToken
   offset := 0
+  
   for ;; {
     updates, err:=getUpdates(botUrl,offset)
     if err != nil{
       log.Println("ERR", err.Error())
     }
+    
     for _, update := range updates{
       err=respond(botUrl,update)
       offset = update.UpdateId + 1
@@ -37,10 +38,12 @@ func getUpdates(botUrl string,offset int)([]Update, error){
     return nil, err
   }
   defer resp.Body.Close()
+  
   body, err:=ioutil.ReadAll(resp.Body)
   if err != nil{
     return nil, err
   }
+  
   var restResponse RestResponse
   err=json.Unmarshal(body, &restResponse)
   if err !=nil{
@@ -52,7 +55,8 @@ func getUpdates(botUrl string,offset int)([]Update, error){
 func respond(botUrl string,update Update) (error){
   var botMessage BotMessage
   botMessage.ChatId = update.Message.Chat.ChatId
-    videoUrl, err := youtube.GetLastVideo(update.Message.Text)
+  videoUrl, err := youtube.GetLastVideo(update.Message.Text)
+  
   botMessage.Text = videoUrl
   if err !=nil{
     return err
@@ -62,6 +66,7 @@ func respond(botUrl string,update Update) (error){
   if err !=nil{
     return err
   }
+  
   _, err=http.Post(botUrl + "/sendMessage", "application/json", bytes.NewBuffer(buf))
   if err !=nil{
     return err
